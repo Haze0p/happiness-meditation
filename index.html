@@ -80,12 +80,12 @@
     <div id="categories"></div>
     <script>
         const categories = {
-            "Nature": ["bird", "forest", "wind", "fire", "earth", "leaves"],
-            "Weather": ["thunder", "windy", "snow", "hail", "drizzle"],
-            "Water": ["ocean", "waves", "rainfall", "stream", "bubble", "drip"],
-            "Instrument": ["piano", "guitar", "violin", "flute", "drum", "harp"],
-            "Children": ["laugh", "train", "heartbeat", "fan", "whistle"],
-            "Calming Voices": ["chant", "hum", "mantra", "hymn", "om"],
+            "Nature": { "bird": "DRIVE_LINK_1", "forest": "DRIVE_LINK_2" },
+            "Weather": { "thunder": "DRIVE_LINK_3", "windy": "DRIVE_LINK_4" },
+            "Water": { "ocean": "DRIVE_LINK_5", "waves": "DRIVE_LINK_6" },
+            "Instrument": { "piano": "DRIVE_LINK_7", "guitar": "DRIVE_LINK_8" },
+            "Children": { "laugh": "DRIVE_LINK_9", "train": "DRIVE_LINK_10" },
+            "Calming Voices": { "chant": "https://drive.google.com/file/d/1UktFh7D0ibtCg8Ts1E8HDKGilW5m1Dqy/view?usp=sharing", "hum": "DRIVE_LINK_12" },
         };
 
         let currentAudio = null;
@@ -99,26 +99,13 @@
             const iconContainer = document.createElement("div");
             iconContainer.classList.add("icons");
 
-            categories[category].forEach(iconName => {
+            Object.entries(categories[category]).forEach(([iconName, driveLink]) => {
                 const icon = document.createElement("div");
                 icon.classList.add("icon");
-
-                const extensions = ['png', 'jpg', 'jpeg', 'gif'];
-                let imageUrl = '';
-
-                for (let ext of extensions) {
-                    let testImage = new Image();
-                    testImage.src = `images/${category.toLowerCase()}/${iconName}.${ext}`;
-                    testImage.onload = function () {
-                        if (!imageUrl) {
-                            imageUrl = this.src;
-                            icon.style.backgroundImage = `url('${imageUrl}')`;
-                        }
-                    };
-                }
+                icon.style.backgroundImage = `url('images/${category.toLowerCase()}/${iconName}.png')`;
 
                 const iconLabel = document.createElement("span");
-                iconLabel.textContent = iconName; 
+                iconLabel.textContent = iconName;
                 icon.appendChild(iconLabel);
 
                 icon.onclick = () => {
@@ -126,7 +113,7 @@
                         currentAudio.pause();
                         currentAudio.currentTime = 0;
                     }
-                    currentAudio = new Audio(`./sounds/${category.toLowerCase()}/${iconName}.mp3`);
+                    currentAudio = new Audio(driveLink);
                     currentAudio.play();
                 };
 
