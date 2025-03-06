@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Icon Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: rgb(2, 0, 36);
+            background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 121, 118, 1) 25%, rgba(87, 255, 0, 1) 100%);
+        }
+
+        .category {
+            margin: 20px;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+        }
+
+        .icons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            align-items: center;
+            position: relative;
+        }
+
+        .icon {
+            width: 80px;
+            height: 80px;
+            background-size: cover;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid #000;
+            position: relative;
+        }
+
+        .icon span {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 12px;
+            visibility: hidden;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+
+        .icon:hover span {
+            visibility: visible;
+        }
+
+        .pause-button {
+            width: 60px;
+            height: 60px;
+            background: black;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            right: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Music Icon Player</h1>
+    <div id="categories"></div>
+    <script>
+        const categories = {
+            "Nature": ["bird", "forest", "wind", "fire", "earth", "leaves"],
+            "Weather": ["thunder", "windy", "snow", "hail", "drizzle"],
+            "Water": ["ocean", "waves", "rainfall", "stream", "bubble", "drip"],
+            "Instrument": ["piano", "guitar", "violin", "flute", "drum", "harp"],
+            "Children": ["laugh", "train", "heartbeat", "fan", "whistle"],
+            "Calming Voices": ["chant", "hum", "mantra", "hymn", "om"],
+        };
+
+        let currentAudio = null;
+        const categoriesDiv = document.getElementById("categories");
+
+        Object.keys(categories).forEach(category => {
+            const section = document.createElement("div");
+            section.classList.add("category");
+            section.innerHTML = `<h2>${category}</h2>`;
+
+            const iconContainer = document.createElement("div");
+            iconContainer.classList.add("icons");
+
+            categories[category].forEach(iconName => {
+                const icon = document.createElement("div");
+                icon.classList.add("icon");
+
+                const extensions = ['png', 'jpg', 'jpeg', 'gif'];
+                let imageUrl = '';
+
+                for (let ext of extensions) {
+                    let testImage = new Image();
+                    testImage.src = `images/${category.toLowerCase()}/${iconName}.${ext}`;
+                    testImage.onload = function () {
+                        if (!imageUrl) {
+                            imageUrl = this.src;
+                            icon.style.backgroundImage = `url('${imageUrl}')`;
+                        }
+                    };
+                }
+
+                const iconLabel = document.createElement("span");
+                iconLabel.textContent = iconName; 
+                icon.appendChild(iconLabel);
+
+                icon.onclick = () => {
+                    if (currentAudio) {
+                        currentAudio.pause();
+                        currentAudio.currentTime = 0;
+                    }
+                    currentAudio = new Audio(`sounds/${category.toLowerCase()}/${iconName}.mp3`);
+                    currentAudio.play();
+                };
+
+                iconContainer.appendChild(icon);
+            });
+
+            const pauseButton = document.createElement("div");
+            pauseButton.classList.add("pause-button");
+            pauseButton.innerHTML = "&#10074;&#10074;";
+            pauseButton.onclick = () => {
+                if (currentAudio) {
+                    currentAudio.pause();
+                }
+            };
+
+            iconContainer.appendChild(pauseButton);
+            section.appendChild(iconContainer);
+            categoriesDiv.appendChild(section);
+        });
+    </script>
+</body>
+
+</html>
